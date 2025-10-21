@@ -4,7 +4,7 @@ const addError  = document.getElementById('add-error');
 
 /* 1) Charger la liste */
 async function chargerArticles() {
-  if (!container) return; // ← page sans liste (ex: add.html)
+  if (!container) return; // ← page sans liste
   try {
     const res = await fetch('./api/articles.php');
     if (!res.ok) throw new Error('Erreur API : ' + res.status);
@@ -84,6 +84,6 @@ if (container) {
     }
   });
 
-  /* 4) Premier chargement (uniquement sur index.html) */
+  /* 4) Premier chargement */
   chargerArticles();
 }
