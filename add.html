@@ -14,6 +14,7 @@
 
         <div class="form-container">
             <form id="add-form" method='POST'>
+                <input type="hidden" name="csrf_token" id="csrf_token">
                 <div class="form-group">
                     <label for="titre">Titre</label>
                     <input type="text" name="titre" id="titre" class="form-control" placeholder="Entrez le titre de l'article">
@@ -24,9 +25,14 @@
                     <textarea name="contenu" id="contenu" class="form-control" placeholder="Écrivez le contenu de votre article..."></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary">
-                    📝 Publier l'article
-                </button>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        📝 Publier l'article
+                    </button>
+                    <a href="index.html" class="btn btn-secondary">
+                        ↩️ Annuler
+                    </a>
+                </div>
             </form>
             <p id="add-error" class="error"></p>
         </div>

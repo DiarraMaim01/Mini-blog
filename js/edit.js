@@ -1,6 +1,27 @@
  const form = document.getElementById("edit-form");
  const erreur = document.getElementById("edit-error");
 
+ let csrfToken = '';
+
+// Récupérer le token CSRF
+async function getCsrfToken() {
+    try {
+        const response = await fetch('./api/csrf_token.php');
+        const data = await response.json();
+        if (data.ok) {
+            csrfToken = data.token;
+            document.querySelectorAll('input[name="csrf_token"]').forEach(input => {
+                input.value = csrfToken;
+            });
+        }
+    } catch (error) {
+        console.error('Erreur CSRF:', error);
+    }
+}
+
+// Appel au chargement
+getCsrfToken();
+
 async function chargerArticle() {
     // chargement de l'id de l'article a modifier depuis l'URL
  const id = new URLSearchParams(location.search).get('id');
@@ -35,6 +56,7 @@ form.addEventListener('submit', async(e)=>{
     e.preventDefault();
 
     fd = new FormData(form) ;
+    fd.append('csrf_token', csrfToken);
 
     try{
         const res = await fetch("./api/articles_edit.php", { 

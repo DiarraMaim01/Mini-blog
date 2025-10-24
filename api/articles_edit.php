@@ -1,6 +1,6 @@
 <?php
-// api/articles_edit.php
 require_once __DIR__ . '/../utils/functions.php';
+require_once __DIR__ . '/../utils/csrf.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -16,7 +16,7 @@ try {
             exit;
         }
 
-        $article = get_article((int)$id); // -> doit renvoyer null si introuvable
+        $article = get_article((int)$id);
         if (!$article) {
             http_response_code(404);
             echo json_encode(['ok' => false, 'error' => 'Article introuvable']);
@@ -29,6 +29,13 @@ try {
 
     // POST /api/articles_edit.php 
     if ($method === 'POST') {
+        // Vérification CSRF
+        if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
+            http_response_code(403);
+            echo json_encode(['ok' => false, 'error' => 'Token CSRF invalide']);
+            exit;
+        }
+
         $id      = trim($_POST['id'] ?? '');
         $titre   = trim($_POST['titre'] ?? '');
         $contenu = trim($_POST['contenu'] ?? '');
@@ -45,7 +52,6 @@ try {
             exit;
         }
 
-        
         $existing = get_article((int)$id);
         if (!$existing) {
             http_response_code(404);
@@ -71,3 +77,4 @@ try {
     http_response_code(500);
     echo json_encode(['ok' => false, 'error' => $e->getMessage()]);
 }
+?>
